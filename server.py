@@ -56,10 +56,17 @@ def create_app():
 
     @app.route('/purchasePlaces',methods=['POST'])
     def purchasePlaces():
-        competition = [c for c in competitions if c['name'] == request.form['competition']][0]
-        club = [c for c in clubs if c['name'] == request.form['club']][0]
+        my_competitions = [c for c in competitions if c['name'] == request.form['competition']]
+        my_clubs = [c for c in clubs if c['name'] == request.form['club']]
+
+        if len(my_competitions) == 0 or len(my_clubs) == 0:
+            return render_template('index.html'), 404
+        club = my_clubs[0]
+        competition = my_competitions[0]
+        
         placesRequired = int(request.form['places'])
-        competition['numberOfPlaces'] = int(competition['numberOfPlaces'])-placesRequired
+        competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
+        club['points'] = str(int(club['points']) - placesRequired)
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions)
 
