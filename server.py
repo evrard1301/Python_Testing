@@ -1,6 +1,46 @@
 import json
 from flask import Flask,render_template,request,redirect,flash,url_for
 
+class PurchaseManager:
+
+    class Purchase:
+        def __init__(self, club, competition, places):
+            self.club = club
+            self.competition = competition
+            self.places = places
+
+    def __init__(self):
+        self.purchases = []
+
+    def get(self, club, competition):
+        all_p = [
+            p
+            for p in self.purchases
+            if p.club == club
+            and p.competition == competition
+        ]
+
+        if len(all_p) == 0:
+            return 0
+        
+        return all_p[0].places
+        
+        
+    def update(self, club, competition, places):
+        all_p = [
+            p
+            for p in self.purchases
+            if p.club == club
+            and p.competition == competition
+        ]
+
+        if len(all_p) == 0:
+            self.purchases.append(self.Purchase(club,
+                                                competition,
+                                                places))
+        else:
+            all_p[0].places += places
+        
 def loadClubs():
     with open('clubs.json') as c:
         listOfClubs = json.load(c)['clubs']
@@ -14,6 +54,7 @@ def loadCompetitions():
     
 competitions = []
 clubs = []
+purchase_manager = PurchaseManager()
     
 def create_app():
     app = Flask(__name__)
@@ -66,6 +107,14 @@ def create_app():
         
         placesRequired = int(request.form['places'])
 
+        previousRequired = purchase_manager.get(club,
+                                                competition)
+        
+        if placesRequired + previousRequired > 12:
+            flash('cannot purchase more than'
+                  ' 12 places by competition')
+            return render_template('welcome.html', club=club, competitions=competitions)
+
         if placesRequired > int(club['points']):
             flash('not enough point')
             return render_template('welcome.html', club=club, competitions=competitions)
@@ -76,6 +125,10 @@ def create_app():
 
         competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
         club['points'] = str(int(club['points']) - placesRequired)
+        purchase_manager.update(club,
+                                competition,
+                                placesRequired)
+        
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions)
 

@@ -120,3 +120,63 @@ def test_err_purchase_no_enough_places(client, mocker):
     
     assert '1' == server.competitions[0]['numberOfPlaces']
     assert '5' == server.clubs[0]['points']
+
+def test_err_purchase_more_than_12(client, mocker):
+
+    mocker.patch('server.clubs', new=[
+        {
+            'name': 'myclub',
+            'email': 'hello@world.com',
+            'points': '100'
+        }
+    ])
+
+    mocker.patch('server.competitions', new=[
+        {
+            'name': 'mycompetition',
+            'date': '2023-10-22 13:30:00',
+            'numberOfPlaces': '100'
+        }
+    ])
+    
+    client.post('/purchasePlaces', data={
+        'competition': 'mycompetition',
+        'club': 'myclub',
+        'places': '13'
+    })
+    
+    assert '100' == server.competitions[0]['numberOfPlaces']
+    assert '100' == server.clubs[0]['points']
+
+def test_err_purchase_more_than_6_then_7(client, mocker):
+
+    mocker.patch('server.clubs', new=[
+        {
+            'name': 'myclub',
+            'email': 'hello@world.com',
+            'points': '100'
+        }
+    ])
+
+    mocker.patch('server.competitions', new=[
+        {
+            'name': 'mycompetition',
+            'date': '2023-10-22 13:30:00',
+            'numberOfPlaces': '100'
+        }
+    ])
+    
+    client.post('/purchasePlaces', data={
+        'competition': 'mycompetition',
+        'club': 'myclub',
+        'places': '6'
+    })
+
+    client.post('/purchasePlaces', data={
+        'competition': 'mycompetition',
+        'club': 'myclub',
+        'places': '7'
+    })
+
+    assert '94' == server.competitions[0]['numberOfPlaces']
+    assert '94' == server.clubs[0]['points']
