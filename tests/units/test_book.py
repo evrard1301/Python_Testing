@@ -3,7 +3,7 @@ def test_ok_book_find_club_and_competition(client, mocker):
         {
             'name': 'myclub',
             'email': 'hello@world.com',
-            'places': 5
+            'points': '5'
         }
     ])
 
@@ -39,7 +39,7 @@ def test_err_book_competition_not_found(client, mocker):
         {
             'name': 'myclub',
             'email': 'hello@world.com',
-            'places': 5
+            'points': '5'
         }
     ])
 
