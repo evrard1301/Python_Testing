@@ -1,6 +1,6 @@
 import server
 
-def test_ok_purchase(client, mocker):
+def test_ok_purchase(client, mocker, tomorrow):
 
     mocker.patch('server.clubs', new=[
         {
@@ -13,7 +13,7 @@ def test_ok_purchase(client, mocker):
     mocker.patch('server.competitions', new=[
         {
             'name': 'mycompetition',
-            'date': '2023-10-22 13:30:00',
+            'date': tomorrow,
             'numberOfPlaces': '15'
         }
     ])
@@ -27,14 +27,14 @@ def test_ok_purchase(client, mocker):
     assert '10' == server.competitions[0]['numberOfPlaces']
     assert '2' == server.clubs[0]['points']
 
-def test_err_purchase_no_club(client, mocker):
+def test_err_purchase_no_club(client, mocker, tomorrow):
 
     mocker.patch('server.clubs', new=[])
 
     mocker.patch('server.competitions', new=[
         {
             'name': 'mycompetition',
-            'date': '2023-10-22 13:30:00',
+            'date': tomorrow,
             'numberOfPlaces': '15'
         }
     ])
@@ -67,7 +67,7 @@ def test_err_purchase_no_competition(client, mocker):
 
     assert 404 == response.status_code
 
-def test_err_purchase_no_enough_points(client, mocker):
+def test_err_purchase_no_enough_points(client, mocker, tomorrow):
 
     mocker.patch('server.clubs', new=[
         {
@@ -80,7 +80,7 @@ def test_err_purchase_no_enough_points(client, mocker):
     mocker.patch('server.competitions', new=[
         {
             'name': 'mycompetition',
-            'date': '2023-10-22 13:30:00',
+            'date': tomorrow,
             'numberOfPlaces': '15'
         }
     ])
@@ -94,7 +94,7 @@ def test_err_purchase_no_enough_points(client, mocker):
     assert '15' == server.competitions[0]['numberOfPlaces']
     assert '5' == server.clubs[0]['points']
 
-def test_err_purchase_no_enough_places(client, mocker):
+def test_err_purchase_no_enough_places(client, mocker, tomorrow):
 
     mocker.patch('server.clubs', new=[
         {
@@ -107,7 +107,7 @@ def test_err_purchase_no_enough_places(client, mocker):
     mocker.patch('server.competitions', new=[
         {
             'name': 'mycompetition',
-            'date': '2023-10-22 13:30:00',
+            'date': tomorrow,
             'numberOfPlaces': '1'
         }
     ])
@@ -121,7 +121,7 @@ def test_err_purchase_no_enough_places(client, mocker):
     assert '1' == server.competitions[0]['numberOfPlaces']
     assert '5' == server.clubs[0]['points']
 
-def test_err_purchase_more_than_12(client, mocker):
+def test_err_purchase_more_than_12(client, mocker, tomorrow):
 
     mocker.patch('server.clubs', new=[
         {
@@ -134,7 +134,7 @@ def test_err_purchase_more_than_12(client, mocker):
     mocker.patch('server.competitions', new=[
         {
             'name': 'mycompetition',
-            'date': '2023-10-22 13:30:00',
+            'date': tomorrow,
             'numberOfPlaces': '100'
         }
     ])
@@ -148,7 +148,7 @@ def test_err_purchase_more_than_12(client, mocker):
     assert '100' == server.competitions[0]['numberOfPlaces']
     assert '100' == server.clubs[0]['points']
 
-def test_err_purchase_more_than_6_then_7(client, mocker):
+def test_err_purchase_more_than_6_then_7(client, mocker, tomorrow):
 
     mocker.patch('server.clubs', new=[
         {
@@ -161,7 +161,7 @@ def test_err_purchase_more_than_6_then_7(client, mocker):
     mocker.patch('server.competitions', new=[
         {
             'name': 'mycompetition',
-            'date': '2023-10-22 13:30:00',
+            'date': tomorrow,
             'numberOfPlaces': '100'
         }
     ])
@@ -180,3 +180,30 @@ def test_err_purchase_more_than_6_then_7(client, mocker):
 
     assert '94' == server.competitions[0]['numberOfPlaces']
     assert '94' == server.clubs[0]['points']
+
+def test_err_purchase_past_competition(client, mocker):
+
+    mocker.patch('server.clubs', new=[
+        {
+            'name': 'myclub',
+            'email': 'hello@world.com',
+            'points': '7'
+        }
+    ])
+
+    mocker.patch('server.competitions', new=[
+        {
+            'name': 'mycompetition',
+            'date': '2000-10-22 13:30:00',
+            'numberOfPlaces': '15'
+        }
+    ])
+    
+    client.post('/purchasePlaces', data={
+        'competition': 'mycompetition',
+        'club': 'myclub',
+        'places': '5'
+    })
+    
+    assert '15' == server.competitions[0]['numberOfPlaces']
+    assert '7' == server.clubs[0]['points']

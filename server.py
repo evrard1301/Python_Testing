@@ -1,4 +1,5 @@
 import json
+import datetime
 from flask import Flask,render_template,request,redirect,flash,url_for
 
 class PurchaseManager:
@@ -104,12 +105,19 @@ def create_app():
             return render_template('index.html'), 404
         club = my_clubs[0]
         competition = my_competitions[0]
-        
+        competition_date = datetime.datetime.strptime(competition['date'],
+                                                      '%Y-%m-%d %H:%M:%S')
+        current_date = datetime.datetime.now()
+
         placesRequired = int(request.form['places'])
 
         previousRequired = purchase_manager.get(club,
                                                 competition)
-        
+
+        if competition_date < current_date:
+            flash('cannot purchase a terminated competition')
+            return render_template('welcome.html', club=club, competitions=competitions)
+
         if placesRequired + previousRequired > 12:
             flash('cannot purchase more than'
                   ' 12 places by competition')
