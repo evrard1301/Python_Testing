@@ -66,3 +66,30 @@ def test_err_purchase_no_competition(client, mocker):
     })
 
     assert 404 == response.status_code
+
+def test_err_purchase_no_enough_points(client, mocker):
+
+    mocker.patch('server.clubs', new=[
+        {
+            'name': 'myclub',
+            'email': 'hello@world.com',
+            'points': '5'
+        }
+    ])
+
+    mocker.patch('server.competitions', new=[
+        {
+            'name': 'mycompetition',
+            'date': '2023-10-22 13:30:00',
+            'numberOfPlaces': '15'
+        }
+    ])
+    
+    client.post('/purchasePlaces', data={
+        'competition': 'mycompetition',
+        'club': 'myclub',
+        'places': '6'
+    })
+    
+    assert '15' == server.competitions[0]['numberOfPlaces']
+    assert '5' == server.clubs[0]['points']

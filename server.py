@@ -65,6 +65,11 @@ def create_app():
         competition = my_competitions[0]
         
         placesRequired = int(request.form['places'])
+
+        if placesRequired > int(club['points']):
+            flash('not enough point')
+            return render_template('welcome.html', club=club, competitions=competitions)
+
         competition['numberOfPlaces'] = str(int(competition['numberOfPlaces'])-placesRequired)
         club['points'] = str(int(club['points']) - placesRequired)
         flash('Great-booking complete!')
