@@ -1,7 +1,8 @@
 from locust import HttpUser, task
 
+
 class GetCompetitionList(HttpUser):
-    
+
     @task
     def index(self):
         self.client.get('/')

@@ -23,5 +23,10 @@ cov-html:
 	coverage run -m pytest
 	coverage html server.py
 
+pep8-watcher:
+	watch -n 1 "flake8 --count . | tail"
+
+pep8-report:
+	flake8 --format=html --htmldir flake8_report
 
 .PHONY: tests

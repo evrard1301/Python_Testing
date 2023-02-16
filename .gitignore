@@ -6,3 +6,4 @@ lib
 __pycache__
 htmlcov
 .coverage
+flake8_report

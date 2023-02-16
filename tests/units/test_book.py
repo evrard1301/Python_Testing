@@ -14,10 +14,10 @@ def test_ok_book_find_club_and_competition(client, mocker):
             'numberOfPlaces': '15'
         }
     ])
-    
+
     response = client.get('/book/mycompetition/myclub')
     assert 200 == response.status_code
-    
+
 
 def test_err_book_club_not_found(client, mocker):
     mocker.patch('server.clubs', new=[])
@@ -29,10 +29,10 @@ def test_err_book_club_not_found(client, mocker):
             'numberOfPlaces': '15'
         }
     ])
-    
+
     response = client.get('/book/mycompetition/myclub')
     assert 404 == response.status_code
-    
+
 
 def test_err_book_competition_not_found(client, mocker):
     mocker.patch('server.clubs', new=[
@@ -44,6 +44,6 @@ def test_err_book_competition_not_found(client, mocker):
     ])
 
     mocker.patch('server.competitions', new=[])
-    
+
     response = client.get('/book/mycompetition/myclub')
     assert 404 == response.status_code

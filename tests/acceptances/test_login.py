@@ -1,11 +1,13 @@
-from pytest_bdd import scenarios, given, when, then, parsers
-from tests.acceptances.common import *
+from pytest_bdd import scenarios, given, when, parsers
+
 
 scenarios('features/login.feature')
+
 
 @given(parsers.parse('mon adresse email est \'{email}\''))
 def given_email(context, email):
     context['myemail'] = email
+
 
 @when(parsers.parse('je me connecte avec \'{email}\''))
 def user_connect(context, client, email, mocker):
@@ -21,5 +23,5 @@ def user_connect(context, client, email, mocker):
     context['response'] = client.post('/showSummary', data={
         'email': email
     })
-    
+
     assert True

@@ -1,5 +1,3 @@
-import server
-
 def test_ok_summary_email_found(app, client, mocker):
     mocker.patch('server.clubs', new=[
             {
@@ -8,12 +6,13 @@ def test_ok_summary_email_found(app, client, mocker):
                 'points': '12'
             }
     ])
-    
+
     response = client.post('/showSummary', data={
-        'email': 'hello@world.com'        
+        'email': 'hello@world.com'
     })
 
     assert 200 == response.status_code
+
 
 def test_ok_summary_email_not_found(app, client, mocker):
     mocker.patch('server.clubs', new=[
@@ -23,10 +22,9 @@ def test_ok_summary_email_not_found(app, client, mocker):
                 'points': '12'
             }
     ])
-    
+
     response = client.post('/showSummary', data={
-        'email': 'hello@world.com'        
+        'email': 'hello@world.com'
     })
 
     assert 401 == response.status_code
-    
