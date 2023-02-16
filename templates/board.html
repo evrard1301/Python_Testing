@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <title>Public Board || GUDLFT</title>
+  </head>
+  <body>
+
+    <table border="1">
+      <thead>
+	<tr>
+	  <th>Name</th>
+	  <th>Points</th>
+	</tr>
+      </thead>
+
+      <tbody>
+	{% for club in clubs %}
+	  <tr>
+            <td>{{club.name}}</td>
+            <td>{{club.points}}</td>
+	  </tr>
+	{% endfor %}
+      </tbody>
+    </table>
+    
+    <a href="/">back</a>    
+  </body>
+</html>

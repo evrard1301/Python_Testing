@@ -140,8 +140,12 @@ def create_app():
         flash('Great-booking complete!')
         return render_template('welcome.html', club=club, competitions=competitions)
 
+    @app.route('/publicBoard')
+    def public_board():
+        return render_template('board.html', clubs=clubs)
+    
     @app.route('/logout')
     def logout():
         return redirect(url_for('index'))
-
+    
     return app
