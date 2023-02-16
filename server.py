@@ -78,7 +78,7 @@ def create_app():
         if len(all_clubs) > 0:
             club = all_clubs[0]
             return render_template('welcome.html',club=club,competitions=competitions)
-        
+        flash('wrong credentials')
         return render_template('index.html'), 401
 
 
@@ -113,7 +113,7 @@ def create_app():
 
         previousRequired = purchase_manager.get(club,
                                                 competition)
-
+        
         if competition_date < current_date:
             flash('cannot purchase a terminated competition')
             return render_template('welcome.html', club=club, competitions=competitions)
