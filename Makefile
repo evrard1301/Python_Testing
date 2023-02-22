@@ -12,7 +12,7 @@ acceptance-tests:
 
 perf:
 	locust -f tests/performances/locustfile.py \
-		--users 256 \
+		--users 6 \
 		--host http://127.0.0.1:5000
 
 cov:
