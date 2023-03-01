@@ -1,5 +1,29 @@
 # gudlift-registration
 
+0. Running and testing the app
+
+```
+# Run the server
+make run
+
+# Run the unit tests
+make unit-tests
+
+# Run the acceptance tests
+make acceptance-tests
+
+# Run locust
+make perf
+
+# create code coverage report
+make cov
+make cove-html
+
+# create pep8 report
+make pep8-report
+
+```
+
 1. Why
 
 
@@ -13,14 +37,14 @@
 
     * [Flask](https://flask.palletsprojects.com/en/1.1.x/)
 
-        Whereas Django does a lot of things for us out of the box, Flask allows us to add only what we need. 
-     
+        Whereas Django does a lot of things for us out of the box, Flask allows us to add only what we need.
+
 
     * [Virtual environment](https://virtualenv.pypa.io/en/stable/installation.html)
 
         This ensures you'll be able to install the correct packages without interfering with Python on your machine.
 
-        Before you begin, please ensure you have this installed globally. 
+        Before you begin, please ensure you have this installed globally.
 
 
 3. Installation
@@ -38,7 +62,7 @@
 4. Current Setup
 
     The app is powered by [JSON files](https://www.tutorialspoint.com/json/json_quick_guide.htm). This is to get around having a DB until we actually need one. The main ones are:
-     
+
     * competitions.json - list of competitions
     * clubs.json - list of clubs with relevant information. You can look here to see what email addresses the app will accept for login.
 
@@ -46,6 +70,5 @@
 
     You are free to use whatever testing framework you like-the main thing is that you can show what tests you are using.
 
-    We also like to show how well we're testing, so there's a module called 
+    We also like to show how well we're testing, so there's a module called
     [coverage](https://coverage.readthedocs.io/en/coverage-5.1/) you should add to your project.
-
